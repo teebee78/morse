@@ -1,0 +1,16 @@
+:host {
+    display: grid;
+    align-items: start;
+    justify-items: center;
+    height: 100%;
+    grid-template-rows: auto auto;
+    padding: 10px;
+
+    background-color: #111112;
+    color: aliceblue;
+
+    nav > a {
+        color: aliceblue;
+        text-decoration: none;
+    }
+}
