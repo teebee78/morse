@@ -1,8 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { Observable, Subject, distinctUntilKeyChanged, filter, fromEvent, map, merge, pairwise, scan, switchMap, tap, timer } from 'rxjs';
+import { MonoTypeOperatorFunction, Observable, Subject, concatMap, distinctUntilKeyChanged, filter, from, fromEvent, map, merge, pairwise, scan, switchMap, tap, timer } from 'rxjs';
 import { Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 import { SignalComponent } from "../signal/signal.component";
+import { debug } from '../debug-operator';
 
 @Component({
   selector: 'app-decode',
@@ -26,8 +27,9 @@ export class DecodeComponent {
       pairwise(),
       filter(([{ type: lhs }, { type: rhs }]) => lhs === 'keydown' && rhs === 'keyup'),
       map(([{ timeStamp: downTimeStamp }, { timeStamp: upTimeStamp }]) => upTimeStamp - downTimeStamp > 250 ? '-' : '.'),
-      bufferWhileIdle(1000, fromEvent(document, 'keypress')),
+      bufferWhileIdle(750, fromEvent(document, 'keypress')),
       map(emittedSignals => this.decode(emittedSignals)),
+      appendOnceAfterIdleTime(5000, ' '),
       scan((acc, value) => acc + value)
     );
   }
@@ -72,5 +74,35 @@ function bufferWhileIdle(minIdleTime: number, activityIndicator$: Observable<any
         }
       });
     })
+  }
+}
+
+function appendOnceAfterIdleTime<T>(idleTime: number, value: T): MonoTypeOperatorFunction<T> {
+  return function <T>(source: Observable<T>): Observable<T> {
+    return new Observable<T>(subscriber => {
+
+      const activityIndicator$ = new Subject<void>();
+      const inactivitySubscription = activityIndicator$.pipe(
+        switchMap(_ => timer(idleTime).pipe(map(_ => value))),
+        debug('INACTIVE')
+      ).subscribe(value => subscriber.next(value as (T | undefined)));
+
+      source.subscribe({
+        next(value) {
+          activityIndicator$.next();
+          subscriber.next(value);
+        },
+
+        error(err) {
+          subscriber.error(err);
+          inactivitySubscription.unsubscribe();
+        },
+
+        complete() {
+          subscriber.complete();
+          inactivitySubscription.unsubscribe();
+        },
+      });
+    });
   }
 }

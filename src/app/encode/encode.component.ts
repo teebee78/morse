@@ -5,13 +5,14 @@ import { debug } from '../debug-operator';
 import { delayEach } from '../delay-each';
 import { CHAR_END, MAP } from '../morse';
 import { SignalComponent } from '../signal/signal.component';
+import { Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 
 @Component({
   selector: 'app-morse',
   standalone: true,
   imports: [CommonModule, SignalComponent],
   templateUrl: './encode.component.html',
-  styleUrls: ['./encode.component.scss'], 
+  styleUrls: ['./encode.component.scss'],
 })
 export class EncodeComponent {
 
@@ -19,19 +20,30 @@ export class EncodeComponent {
   public typedText$: Observable<string>;
   private readonly durationInMs = 500;
 
-  constructor(@Inject(MAP) charMap: Map<string, readonly (0 | 1)[]>) {
-    const keyDownEvents$ = fromEvent(document, 'keydown').pipe(
-      map(event => (event as KeyboardEvent)), 
+  constructor(@Inject(MORSE_ALPHABET) alphabet: Map<Letter, MorseSignal[]>,) {
+    const keyDownEvents$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
+      map(event => (event as KeyboardEvent)),
       filter(event => event.key.length == 1)
     );
 
     this.typedText$ = keyDownEvents$.pipe(
-      scan((acc, {key}) => acc + key, '')
+      scan((acc, { key }) => acc + key, '')
     );
 
+    /*
+    - dash: three 1s in a row
+    - dot: sigle 1
+    - separated by a single 0
+    - letters are separated by three 0s
+    - words are separated by seven 0s (four 0's = space + three 0s of char end)
+    */
     this.signal$ = keyDownEvents$.pipe(
-      map(({key}) => charMap.get(key)),
+      map(({ key }) => alphabet.get(key as Letter)),
       filter(Boolean),
+      map(morseSignals => morseSignals
+        .map(each => (each === '.' ? [1] : [111]) as (0 | 1)[])
+        .reduce((prev, curr) => (prev.length > 0) ? [...prev, 0, ...curr] : curr, [])
+      ),
       concatMap(sequence => from(sequence).pipe(
         endWith(...CHAR_END),
       )),
