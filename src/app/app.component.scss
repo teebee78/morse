@@ -1,13 +1,20 @@
 :host {
     display: grid;
+    grid-template-rows: auto auto 1fr;
     align-items: start;
     justify-items: center;
     height: 100%;
-    grid-template-rows: auto auto;
+
     padding: 10px;
+    grid-gap: 10px;
 
     background-color: #111112;
     color: aliceblue;
+
+    .alphabet {
+        width: 750px;
+        max-height: 250px;
+    }
 
     nav > a {
         color: aliceblue;

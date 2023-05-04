@@ -1,0 +1,7 @@
+:host {
+    .letters {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, 100px);
+        grid-gap: 0px 10px;
+    }
+}
