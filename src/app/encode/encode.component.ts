@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan } from 'rxjs';
+import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan, tap } from 'rxjs';
 import { debug } from '../debug-operator';
 import { delayEach } from '../delay-each';
 import { CHAR_END, MAP } from '../morse';
 import { SignalComponent } from '../signal/signal.component';
-import { Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
+import { DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 
 @Component({
   selector: 'app-morse',
@@ -18,11 +18,10 @@ export class EncodeComponent {
 
   public signal$: Observable<0 | 1>;
   public typedText$: Observable<string>;
-  private readonly durationInMs = 500;
 
-  constructor(@Inject(MORSE_ALPHABET) alphabet: Map<Letter, MorseSignal[]>,) {
+  constructor(@Inject(MORSE_ALPHABET) alphabet: Map<Letter, MorseSignal[]>,
+              @Inject(DOT_DURATION_IN_MS) private dotTimeInMs: number)   {
     const keyDownEvents$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
-      map(event => (event as KeyboardEvent)),
       filter(event => event.key.length == 1)
     );
 
@@ -41,14 +40,13 @@ export class EncodeComponent {
       map(({ key }) => alphabet.get(key as Letter)),
       filter(Boolean),
       map(morseSignals => morseSignals
-        .map(each => (each === '.' ? [1] : [111]) as (0 | 1)[])
+        .map(each => (each === '.' ? [1] : [1, 1, 1]) as (0 | 1)[])
         .reduce((prev, curr) => (prev.length > 0) ? [...prev, 0, ...curr] : curr, [])
       ),
       concatMap(sequence => from(sequence).pipe(
         endWith(...CHAR_END),
       )),
-      delayEach(this.durationInMs),
-      debug("Morse"),
+      delayEach(2 * dotTimeInMs),
     );
   }
 }
