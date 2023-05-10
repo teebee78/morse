@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Inject } from '@angular/core';
-import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan, startWith, switchMap, tap } from 'rxjs';
-import { debug } from '../debug-operator';
+import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan, startWith, switchMap } from 'rxjs';
 import { delayEach } from '../delay-each';
 import { CHAR_END, MAP } from '../morse';
 import { SignalComponent } from '../signal/signal.component';

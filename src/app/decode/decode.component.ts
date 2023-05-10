@@ -1,9 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
-import { MonoTypeOperatorFunction, Observable, Subject, concat, concatMap, distinctUntilKeyChanged, filter, from, fromEvent, iif, interval, map, merge, pairwise, scan, switchMap, take, takeUntil, tap, timer } from 'rxjs';
+import { Component, Inject, effect } from '@angular/core';
+import { MonoTypeOperatorFunction, Observable, Subject, distinctUntilKeyChanged, filter, fromEvent, iif, map, merge, of, pairwise, scan, startWith, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 import { SignalComponent } from "../signal/signal.component";
-import { debug } from '../debug-operator';
 
 @Component({
   selector: 'app-decode',
@@ -26,18 +25,26 @@ export class DecodeComponent {
       switchMap(_ => timer(0, 20).pipe(takeUntil(keyUp$))),
     );
 
-    console.log('dot time', dotTimeInMs);
+    const escapePressed$ = fromEvent<KeyboardEvent>(document, 'keyup').pipe(
+      filter(({ key }) => key === 'Escape'),
+      map(_ => undefined),
+    );
 
-    this.decodedText$ = merge(keyUp$, keyDown$).pipe(
-      distinctUntilKeyChanged('type'),
-      tap(({ type }) => this.signal$.next(type === 'keydown' ? 1 : 0)),
-      pairwise(),
-      filter(([{ type: lhs }, { type: rhs }]) => lhs === 'keydown' && rhs === 'keyup'),
-      map(([{ timeStamp: downTimeStamp }, { timeStamp: upTimeStamp }]) => upTimeStamp - downTimeStamp > 3 * dotTimeInMs ? '-' : '.'),
-      bufferUntilIdle(3 * dotTimeInMs, activityIndicator$), // char end after 3 * dot time of idle
-      map(emittedSignals => this.decode(emittedSignals)),
-      appendOnceAfterIdleTime(3 * 4 * dotTimeInMs, ' ', activityIndicator$),
-      scan((acc, value) => acc + value)
+    
+    this.decodedText$ = escapePressed$.pipe(
+      startWith(undefined),
+      switchMap(_ => merge(of(''), merge(keyUp$, keyDown$).pipe(
+          distinctUntilKeyChanged('type'),
+          tap(({ type }) => this.signal$.next(type === 'keydown' ? 1 : 0)),
+          pairwise(),
+          filter(([{ type: lhs }, { type: rhs }]) => lhs === 'keydown' && rhs === 'keyup'),
+          map(([{ timeStamp: downTimeStamp }, { timeStamp: upTimeStamp }]) => upTimeStamp - downTimeStamp > 3 * dotTimeInMs ? '-' : '.'),
+          bufferUntilIdle(3 * dotTimeInMs, activityIndicator$), // char end after 3 * dot time of idle
+          map(emittedSignals => this.decode(emittedSignals)),
+          appendOnceAfterIdleTime(3 * 4 * dotTimeInMs, ' ', activityIndicator$),
+          scan<string, string>((acc, value) => acc + value, ''),
+        ),
+      ))
     );
   }
 
