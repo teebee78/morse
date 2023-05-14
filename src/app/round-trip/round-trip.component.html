@@ -1,0 +1,13 @@
+<h2>Round Trip</h2>
+
+<app-signal [signal]="emittedBinarySignals$ | async"/>
+
+<span>{{ typedText$ | async}}</span>
+<br/>
+<span>{{ collectedEncodedMorseSignals$ | async}}</span>
+<br>
+<span>{{ collectedEmittedSignals$ | async }}</span>
+<br/>
+<span>{{ collectedDecodedMorseSignals$ | async }}</span>
+<br/>
+<span>{{ decodedText$ | async }}</span>

@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject, effect } from '@angular/core';
-import { MonoTypeOperatorFunction, Observable, Subject, distinctUntilKeyChanged, filter, fromEvent, iif, map, merge, of, pairwise, scan, startWith, switchMap, takeUntil, tap, timer } from 'rxjs';
+import { Component, Inject } from '@angular/core';
+import { Observable, Subject, distinctUntilKeyChanged, filter, fromEvent, map, merge, of, pairwise, scan, startWith, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 import { SignalComponent } from "../signal/signal.component";
+import { bufferUntilIdle } from '../operators/buffer-until-idle.operator';
+import { appendOnceAfterIdleTime } from '../operators/append-once-after-idle-time.operator';
 
 @Component({
   selector: 'app-decode',
@@ -57,101 +59,3 @@ export class DecodeComponent {
     return '?';
   }
 }
-
-
-/**
- *  emits the collected values after activityIndicator$ did not emit any value for minIdleTime ms. 
-**/
-function bufferUntilIdle(minIdleTime: number, activityIndicator$: Observable<any>) {
-  return function <T>(source: Observable<T>): Observable<T[]> {
-    return new Observable(subscriber => {
-      var buffer: T[] = [];
-      const tickerSubscription = activityIndicator$.pipe(
-        switchMap(_ => timer(minIdleTime)),
-      ).subscribe(_ => {
-        console.log('>>>> char end');
-        subscriber.next(buffer);
-        buffer = [];
-      });
-
-      const sourceSubscription = source.subscribe({
-        next(value) {
-          buffer.push(value);
-        },
-
-        error(error) {
-          subscriber.error(error);
-        },
-
-        complete() {
-          subscriber.complete();
-        }
-      });
-
-      return () => {
-        tickerSubscription.unsubscribe();
-        sourceSubscription.unsubscribe();
-      }
-    })
-  }
-}
-
-function appendOnceAfterIdleTime<T>(minIdleTime: number, value: T, activityIndicator$?: Observable<any>): MonoTypeOperatorFunction<T> {
-  return (source: Observable<T>) => new Observable<T>(subscriber => {
-    const activitySubscription = iif(() => !!activityIndicator$, activityIndicator$!, source).pipe(
-      switchMap(_ => timer(minIdleTime))
-    ).subscribe(_ => {
-      console.log('>>>> world end');
-      subscriber.next(value)
-    });
-
-    const subscription = source.subscribe({
-      next(each) {
-        subscriber.next(each);
-      },
-
-      error(error) {
-        subscriber.error(error);
-      },
-
-      complete() {
-        subscriber.complete();
-      },
-    });
-
-    return () => {
-      activitySubscription.unsubscribe();
-      subscriber.unsubscribe();
-    }
-  });
-}
-
-// function appendOnceAfterIdleTime<T>(idleTime: number, value: T): MonoTypeOperatorFunction<T> {
-//   return function <T>(source: Observable<T>): Observable<T> {
-//     return new Observable<T>(subscriber => {
-
-//       const activityIndicator$ = new Subject<void>();
-//       const inactivitySubscription = activityIndicator$.pipe(
-//         switchMap(_ => timer(idleTime).pipe(map(_ => value))),
-//         debug('INACTIVE')
-//       ).subscribe(value => subscriber.next(value as (T | undefined)));
-
-//       source.subscribe({
-//         next(value) {
-//           activityIndicator$.next();
-//           subscriber.next(value);
-//         },
-
-//         error(err) {
-//           subscriber.error(err);
-//           inactivitySubscription.unsubscribe();
-//         },
-
-//         complete() {
-//           subscriber.complete();
-//           inactivitySubscription.unsubscribe();
-//         },
-//       });
-//     });
-//   }
-// }

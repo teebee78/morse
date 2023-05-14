@@ -1,7 +1,11 @@
-<nav>[<a routerLink="encode">ENCODE</a>][<a routerLink="decode">DECODE</a>]</nav>
+<nav>
+    [<a routerLink="encode">ENCODE</a>]
+    [<a routerLink="decode">DECODE</a>]
+    [<a routerLink="round-trip">ROUND TRIP</a>]
+</nav>
 
 <main>
-    <router-outlet></router-outlet>
+    <router-outlet/>
 </main>
 
-<app-alphabet class="alphabet"></app-alphabet>
+<app-alphabet class="alphabet"/>
