@@ -5,6 +5,7 @@ import { EncodeService } from '../encode.service';
 import { Letter, MorseSignal } from '../morse-alphabet';
 import { bufferUntilIdle } from '../operators/buffer-until-idle.operator';
 import { SignalComponent } from '../signal/signal.component';
+import { appendOnceAfterIdleTime } from '../operators/append-once-after-idle-time.operator';
 
 
 @Component({
@@ -30,7 +31,7 @@ export class RoundTripComponent {
   public decodedMorseSignals$: Observable<MorseSignal>;
   public collectedDecodedMorseSignals$: Observable<string>;
 
-  public decodedLetter$: Observable<Letter | '?'>;
+  public decodedLetter$: Observable<Letter | '?' | ' '>;
   public decodedText$: Observable<string>;
 
   constructor(encodeService: EncodeService) {
@@ -68,11 +69,13 @@ export class RoundTripComponent {
       ))
     );
 
+    const activityIndicator$ = this.emittedBinarySignals$.pipe(filter(each => each === 1));
     this.decodedLetter$ = escapePressed$.pipe(
       startWith(undefined),
       switchMap(_ => this.decodedMorseSignals$.pipe(
-        bufferUntilIdle(3 * this.ENCODE_TIME, this.emittedBinarySignals$.pipe(filter(each => each === 1))),
+        bufferUntilIdle(3 * this.ENCODE_TIME, activityIndicator$),
         encodeService.decodeMorseSignalsToLetter(),
+        appendOnceAfterIdleTime(7 * this.ENCODE_TIME, ' ' as ' ', activityIndicator$)
       )),
     );
 

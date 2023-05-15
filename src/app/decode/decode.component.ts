@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Observable, Subject, distinctUntilKeyChanged, filter, fromEvent, map, merge, of, pairwise, scan, startWith, switchMap, takeUntil, tap, timer } from 'rxjs';
 import { DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 import { SignalComponent } from "../signal/signal.component";
@@ -12,6 +12,7 @@ import { appendOnceAfterIdleTime } from '../operators/append-once-after-idle-tim
   templateUrl: './decode.component.html',
   styleUrls: ['./decode.component.scss'],
   imports: [CommonModule, SignalComponent],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DecodeComponent {
 
