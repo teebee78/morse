@@ -1,23 +1,33 @@
 :host {
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-    align-items: start;
-    justify-items: center;
     height: 100%;
-
     padding: 10px;
-    grid-gap: 10px;
-
     background-color: #111112;
     color: aliceblue;
+    display: grid;
+    grid-template: 
+        "paddingLeft header paddingRight" auto
+        "paddingLeft main paddingRight" 600px
+        "paddingLeft footer paddingRight" 1fr
+        / 1fr minmax(500px, 750px) 1fr;
+    grid-gap: 10px;
+    
+    > nav {
+        grid-area: header;
 
-    .alphabet {
-        width: 750px;
-        max-height: 250px;
+        display: flex;
+        justify-content: space-between;
+
+        a {
+            color: aliceblue;
+            text-decoration: none;
+        }
     }
 
-    nav > a {
-        color: aliceblue;
-        text-decoration: none;
+    > main {
+        grid-area: main;
+    }
+
+    > app-alphabet {
+        grid-area: footer;
     }
 }

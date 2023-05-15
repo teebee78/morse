@@ -1,13 +1,18 @@
 <h2>Round Trip</h2>
-
+<i>type along, it will be first encoded and then decoded</i>
 <app-signal [signal]="emittedBinarySignals$ | async"/>
 
+<h4>What you typed</h4>
 <span>{{ typedText$ | async}}</span>
-<br/>
+
+<h4>Encoded as Morse Signals</h4>
 <span>{{ collectedEncodedMorseSignals$ | async}}</span>
-<br>
+
+<h4>Encoded as Binary signals</h4>
 <span>{{ collectedEmittedSignals$ | async }}</span>
-<br/>
+
+<h4>Decoded back to Morse Signals</h4>
 <span>{{ collectedDecodedMorseSignals$ | async }}</span>
-<br/>
+
+<h4>Decoded back to Text</h4>
 <span>{{ decodedText$ | async }}</span>

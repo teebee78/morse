@@ -1,0 +1,27 @@
+:host {
+    display: grid;
+    align-items: center;
+    grid-template: auto auto 150px repeat(10, auto);
+    grid-gap: 10px;
+
+    > h2 {
+        justify-self: end;
+    }
+
+    > app-signal {
+        width: 200px;
+        height: 150px;
+        justify-self: center;
+        border-radius: 10px;
+        border: 1px solid aliceblue;
+    }
+
+    > span {
+        overflow-x: hidden;
+        text-overflow:  ellipsis;
+        width: 100%;
+        justify-self: start;
+        height: 1.5em;
+        border-bottom: 1px dashed aliceblue;
+    }
+}
