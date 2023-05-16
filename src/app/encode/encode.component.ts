@@ -61,7 +61,7 @@ export class EncodeComponent {
           map(({ key }) => alphabet.get(key as Letter)),
           filter(Boolean),
           map(morseSignals => morseSignals
-            .map(each => (each === '.' ? [1] : [1, 1, 1]) as (0 | 1)[])
+            .map(each => (each === '·' ? [1] : [1, 1, 1]) as (0 | 1)[])
             .reduce((prev, curr) => (prev.length > 0) ? [...prev, 0, ...curr] : curr, [])
           ),
           concatMap(sequence => from(sequence).pipe(

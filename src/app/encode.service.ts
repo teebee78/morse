@@ -21,7 +21,7 @@ export class EncodeService {
   public encodeMorseSignalToBinarySignal(delay: number = 0): OperatorFunction<MorseSignal[], BinarySignal> {
     return source => source.pipe(
         map(morseSignals => morseSignals
-          .map(each => (each === '.' ? [1] : [1, 1, 1]) as BinarySignal[])
+          .map(each => (each === '·' ? [1] : [1, 1, 1]) as BinarySignal[])
           .reduce((prev, curr) => (prev.length > 0) ? [...prev, 0, ...curr] : curr, [])
         ), 
         concatMap(sequence => from(sequence).pipe(
@@ -42,7 +42,7 @@ export class EncodeService {
               bufferd1s++;
             } else {
               if (bufferd1s === 1) {
-                subscriber.next('.');
+                subscriber.next('·');
                 bufferd1s = 0;
               } else if (bufferd1s === 3) {
                 subscriber.next('-');
@@ -81,7 +81,6 @@ export class EncodeService {
       })
     )
   }
-
 }
 
 

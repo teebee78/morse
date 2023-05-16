@@ -41,7 +41,7 @@ export class DecodeComponent {
           tap(({ type }) => this.signal$.next(type === 'keydown' ? 1 : 0)),
           pairwise(),
           filter(([{ type: lhs }, { type: rhs }]) => lhs === 'keydown' && rhs === 'keyup'),
-          map(([{ timeStamp: downTimeStamp }, { timeStamp: upTimeStamp }]) => upTimeStamp - downTimeStamp > 3 * dotTimeInMs ? '-' : '.'),
+          map(([{ timeStamp: downTimeStamp }, { timeStamp: upTimeStamp }]) => upTimeStamp - downTimeStamp > 3 * dotTimeInMs ? '-' : '·'),
           bufferUntilIdle(3 * dotTimeInMs, activityIndicator$), // char end after 3 * dot time of idle
           map(emittedSignals => this.decode(emittedSignals)),
           appendOnceAfterIdleTime(3 * 4 * dotTimeInMs, ' ', activityIndicator$),
