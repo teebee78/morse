@@ -2,9 +2,8 @@ import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan, startWith, switchMap } from 'rxjs';
 import { delayEach } from '../delay-each';
-import { CHAR_END, MAP } from '../morse';
 import { SignalComponent } from '../signal/signal.component';
-import { DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
+import { CHAR_END, DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 
 @Component({
   selector: 'app-morse',

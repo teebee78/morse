@@ -1,10 +1,7 @@
 import { Inject, Injectable } from '@angular/core';
-import { BinarySignal, Letter, MORSE_ALPHABET, MorseSignal } from './morse-alphabet';
-import { Observable, Operator, OperatorFunction, concat, concatMap, endWith, filter, from, map, subscribeOn } from 'rxjs';
+import { Observable, OperatorFunction, concatMap, endWith, from, map } from 'rxjs';
 import { delayEach } from './delay-each';
-import { CHAR_END } from './morse';
-import { sequence } from '@angular/animations';
-import { bufferUntilIdle } from './operators/buffer-until-idle.operator';
+import { BinarySignal, CHAR_END, Letter, MORSE_ALPHABET, MorseSignal } from './morse-alphabet';
 
 @Injectable({ providedIn: 'root' })
 export class EncodeService {

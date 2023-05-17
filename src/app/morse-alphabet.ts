@@ -5,6 +5,9 @@ export type Letter = ' ' | 'a' | 'b' | 'c' | 'd' | 'e' | 'f' | 'g' | 'h' | 'i' |
 export type MorseSignal = '·' | '-';
 export type BinarySignal = 0 | 1;
 
+export const SPACE_ENCODED: readonly BinarySignal[] = [0, 0, 0, 0];
+export const CHAR_END: readonly BinarySignal[] = [0, 0, 0];
+
 /**
  * Defines the signal duration of a dot. 
  * A dash is when the duraration is 3 * dot duration 
