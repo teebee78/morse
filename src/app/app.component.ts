@@ -17,10 +17,6 @@ import { AlphabetComponent } from "./alphabet/alphabet.component";
 })
 export class AppComponent {
 
-    constructor(public route: ActivatedRoute) {
-    console.log('y', route.snapshot, window.location.pathname)
-    }
-
     public get currentPath(): string {
         return window.location.pathname
     }
