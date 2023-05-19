@@ -1,10 +1,11 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Observable, Subject, distinctUntilKeyChanged, filter, fromEvent, map, merge, of, pairwise, scan, startWith, switchMap, takeUntil, tap, timer } from 'rxjs';
-import { DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
+import { Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 import { SignalComponent } from "../signal/signal.component";
 import { bufferUntilIdle } from '../operators/buffer-until-idle.operator';
 import { appendOnceAfterIdleTime } from '../operators/append-once-after-idle-time.operator';
+import { DOT_DURATION_IN_MS } from 'src/main';
 
 @Component({
   selector: 'app-decode',
