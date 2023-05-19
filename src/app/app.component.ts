@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterLink, RouterOutlet } from '@angular/router';
-import { AlphabetComponent } from "./alphabet/alphabet.component";
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ActivatedRoute, RouterLink, RouterOutlet } from '@angular/router';
+import { AlphabetComponent } from "./alphabet/alphabet.component";
 
 @Component({
     selector: 'app-root',
@@ -23,5 +23,5 @@ export class AppComponent {
 
     public get currentPath(): string {
         return window.location.pathname
-    };
+    }
 }
