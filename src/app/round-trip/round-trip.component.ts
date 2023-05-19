@@ -43,13 +43,13 @@ export class RoundTripComponent {
 
     const escapePressed$ = fromEvent<KeyboardEvent>(document, 'keyup').pipe(
       filter(({ key }) => key === 'Escape'),
-      map(_ => undefined),
+      map(() => undefined),
       shareReplay({ refCount: false }),
     );
 
     this.encodedMorseSignals$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => typedLetters$.pipe(
+      switchMap(() => typedLetters$.pipe(
         map(value => value as Letter),
         encodeService.encodeLetterToMorseSinal()
       )),
@@ -57,14 +57,14 @@ export class RoundTripComponent {
 
     this.emittedBinarySignals$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => this.encodedMorseSignals$.pipe(
+      switchMap(() => this.encodedMorseSignals$.pipe(
         encodeService.encodeMorseSignalToBinarySignal(this.ENCODE_TIME)
       ))
     );
 
     this.decodedMorseSignals$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => this.emittedBinarySignals$.pipe(
+      switchMap(() => this.emittedBinarySignals$.pipe(
         encodeService.decodeBinarySignalToMorseSignal(),
       ))
     );
@@ -72,16 +72,16 @@ export class RoundTripComponent {
     const activityIndicator$ = this.emittedBinarySignals$.pipe(filter(each => each === 1));
     this.decodedLetter$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => this.decodedMorseSignals$.pipe(
+      switchMap(() => this.decodedMorseSignals$.pipe(
         bufferUntilIdle(3 * this.ENCODE_TIME, activityIndicator$),
         encodeService.decodeMorseSignalsToLetter(),
-        appendOnceAfterIdleTime(7 * this.ENCODE_TIME, ' ' as ' ', activityIndicator$)
+        appendOnceAfterIdleTime(7 * this.ENCODE_TIME, ' ' as Letter, activityIndicator$)
       )),
     );
 
     this.typedText$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => typedLetters$.pipe(
+      switchMap(() => typedLetters$.pipe(
         startWith(''),
         scan((acc, eachLetter) => acc + eachLetter, ''),
       ))
@@ -89,7 +89,7 @@ export class RoundTripComponent {
 
     this.collectedEncodedMorseSignals$ = escapePressed$.pipe(
       startWith(''),
-      switchMap(_ => this.encodedMorseSignals$.pipe(
+      switchMap(() => this.encodedMorseSignals$.pipe(
         scan((acc, signals) => acc + ' ' + signals.join(''), ''),
         startWith('')
       ))
@@ -97,7 +97,7 @@ export class RoundTripComponent {
 
     this.collectedEmittedSignals$ = escapePressed$.pipe(
       startWith(''),
-      switchMap(_ => this.emittedBinarySignals$.pipe(
+      switchMap(() => this.emittedBinarySignals$.pipe(
         scan((acc, signal) => acc + signal, ''),
         startWith('')
       )
@@ -105,7 +105,7 @@ export class RoundTripComponent {
 
     this.collectedDecodedMorseSignals$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => this.decodedMorseSignals$.pipe(
+      switchMap(() => this.decodedMorseSignals$.pipe(
         startWith(''),
         scan((acc, eachSinal) => acc + eachSinal, '')
       ))
@@ -113,11 +113,10 @@ export class RoundTripComponent {
 
     this.decodedText$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => this.decodedLetter$.pipe(
+      switchMap(() => this.decodedLetter$.pipe(
         startWith(''),
         scan((acc, eachSinal) => acc + eachSinal, '')
       ))
     );
   }
 }
-

@@ -1,12 +1,11 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction, iif, switchMap, timer } from "rxjs";
+import { Observable, OperatorFunction, switchMap, timer } from "rxjs";
 
-export function appendOnceAfterIdleTime<T, U>(minIdleTime: number, value: U, activityIndicator$?: Observable<any>): OperatorFunction<T, T | U> {
+export function appendOnceAfterIdleTime<T, U>(minIdleTime: number, value: U, activityIndicator$?: Observable<unknown>): OperatorFunction<T, T | U> {
     return (source: Observable<T>) => new Observable<T | U>(subscriber => {
-      const activitySubscription = iif(() => !!activityIndicator$, activityIndicator$!, source)
-      .pipe(
-        switchMap(_ => timer(minIdleTime))
+      const activitySubscription = (activityIndicator$ ?? source).pipe(
+        switchMap(() => timer(minIdleTime))
       )
-      .subscribe(_ => subscriber.next(value));
+      .subscribe(() => subscriber.next(value));
   
       const subscription = source.subscribe({
         next(each) {
@@ -24,7 +23,7 @@ export function appendOnceAfterIdleTime<T, U>(minIdleTime: number, value: U, act
   
       return () => {
         activitySubscription.unsubscribe();
-        subscriber.unsubscribe();
+        subscription.unsubscribe();
       }
     });
   }

@@ -1,7 +1,7 @@
 <nav>
-    <span>[<a routerLink="encode">ENCODE</a>]</span>
-    <span>[<a routerLink="decode">DECODE</a>]</span>
-    <span>[<a routerLink="round-trip">ROUND TRIP</a>]</span>
+    <span>[<a routerLink="encode" [ngClass]="{'active': currentPath === '/encode'}">ENCODE</a>]</span>
+    <span>[<a routerLink="decode" [ngClass]="{'active': currentPath === '/decode'}" >DECODE</a>]</span>
+    <span>[<a routerLink="round-trip" [ngClass]="{'active': currentPath === '/round-trip'}">ROUND TRIP</a>]</span>
 </nav>
 
 <main>

@@ -1,17 +1,17 @@
-import { MonoTypeOperatorFunction, Observable, OperatorFunction, iif, switchMap, timer } from "rxjs";
+import { Observable, OperatorFunction, switchMap, timer } from "rxjs";
 
 /**
  *  emits the collected values as an array after activityIndicator$ did not emit any value for minIdleTime ms. 
 **/
-export function bufferUntilIdle<T>(minIdleTime: number, activityIndicator$: Observable<any>): OperatorFunction<T, T[]> { 
+export function bufferUntilIdle<T>(minIdleTime: number, activityIndicator$: Observable<unknown>): OperatorFunction<T, T[]> { 
     return function <T>(source: Observable<T>): Observable<T[]> {
       return new Observable(subscriber => {
-        var buffer: T[] = [];
+        let buffer: T[] = [];
 
         const tickerSubscription =  activityIndicator$.pipe(
-          switchMap(_ => timer(minIdleTime)),
+          switchMap(() => timer(minIdleTime)),
         )
-        .subscribe(_ => {
+        .subscribe(() => {
           subscriber.next(buffer); // TODO Thomas push each one separate or use all? 
           buffer = [];
         });
@@ -36,4 +36,4 @@ export function bufferUntilIdle<T>(minIdleTime: number, activityIndicator$: Obse
         }
       })
     }
-  };
+  }

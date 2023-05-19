@@ -15,7 +15,7 @@ export class EncodeService {
     );
   }
 
-  public encodeMorseSignalToBinarySignal(delay: number = 0): OperatorFunction<MorseSignal[], BinarySignal> {
+  public encodeMorseSignalToBinarySignal(delay = 0): OperatorFunction<MorseSignal[], BinarySignal> {
     return source => source.pipe(
         map(morseSignals => morseSignals
           .map(each => (each === '·' ? [1] : [1, 1, 1]) as BinarySignal[])
@@ -69,7 +69,7 @@ export class EncodeService {
   public decodeMorseSignalsToLetter(): OperatorFunction<MorseSignal[], Letter | '?'> {
     return source => source.pipe(
       map(signalsToDecode => {
-        for (let [letter, signals] of this.alphabet) {
+        for (const [letter, signals] of this.alphabet) {
           if (signals.join('') === signalsToDecode.join('')) {
             return letter;
           }

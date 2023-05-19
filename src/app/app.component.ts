@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { ActivatedRoute, ActivatedRouteSnapshot, Router, RouterLink, RouterOutlet } from '@angular/router';
 import { AlphabetComponent } from "./alphabet/alphabet.component";
+import { CommonModule } from '@angular/common';
 
 @Component({
     selector: 'app-root',
@@ -10,9 +11,17 @@ import { AlphabetComponent } from "./alphabet/alphabet.component";
     imports: [
         RouterOutlet,
         RouterLink,
-        AlphabetComponent
+        AlphabetComponent,
+        CommonModule
     ]
 })
 export class AppComponent {
-  
+
+    constructor(public route: ActivatedRoute) {
+    console.log('y', route.snapshot, window.location.pathname)
+    }
+
+    public get currentPath(): string {
+        return window.location.pathname
+    };
 }

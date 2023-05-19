@@ -1,7 +1,7 @@
 <h2>Alphabet</h2>
 
 <section class="letters">
-    <span *ngFor="let entry of alphabet | keyvalue">
+    <span *ngFor="let entry of alphabet | keyvalue:compareFn">
         {{ entry.key }}: {{ entry.value.join(' ')}}
     </span>    
 </section>

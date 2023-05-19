@@ -1,7 +1,12 @@
 :host {
     .letters {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, 100px);
-        grid-gap: 0px 10px;
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+
+        height: 200px; // flex-wrap does not work without
+        // display: grid;
+        // grid-template-columns: repeat(auto-fit, 100px);
+        // grid-gap: 0px 10px;
     }
 }

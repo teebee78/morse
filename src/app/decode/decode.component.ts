@@ -25,18 +25,18 @@ export class DecodeComponent {
     const keyDown$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(filter(({ key }) => key === ' '));
 
     const activityIndicator$ = keyDown$.pipe(
-      switchMap(_ => timer(0, 20).pipe(takeUntil(keyUp$))),
+      switchMap(() => timer(0, 20).pipe(takeUntil(keyUp$))),
     );
 
     const escapePressed$ = fromEvent<KeyboardEvent>(document, 'keyup').pipe(
       filter(({ key }) => key === 'Escape'),
-      map(_ => undefined),
+      map(() => undefined),
     );
 
     
     this.decodedText$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => merge(of(''), merge(keyUp$, keyDown$).pipe(
+      switchMap(() => merge(of(''), merge(keyUp$, keyDown$).pipe(
           distinctUntilKeyChanged('type'),
           tap(({ type }) => this.signal$.next(type === 'keydown' ? 1 : 0)),
           pairwise(),
@@ -52,7 +52,7 @@ export class DecodeComponent {
   }
 
   private decode(signalsToDecode: MorseSignal[]): Letter | '?' {
-    for (let [letter, signals] of this.alphabet) {
+    for (const [letter, signals] of this.alphabet) {
       if (signals.join('') === signalsToDecode.join('')) {
         return letter;
       }

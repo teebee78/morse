@@ -1,5 +1,5 @@
-import { Component, HostBinding, HostListener, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
   selector: 'app-signal',

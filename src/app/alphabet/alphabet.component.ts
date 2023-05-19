@@ -15,4 +15,20 @@ export class AlphabetComponent {
     
   }
 
+  public compareFn = ({ key: a}: {key: Letter}, { key: b}: {key: Letter}): number =>  {
+    if (isNumeric(a) && isNumeric(b)) {
+      return +a - +b;
+    }
+    if (isNumeric(a) && !isNumeric(b)) {
+      return -1;
+    }
+    if (!isNumeric(a) && isNumeric(b)) {
+      return -1;
+    }
+    return a.localeCompare(b)
+  }
+}
+
+function isNumeric(value: string) {
+  return /^-?\d+$/.test(value);
 }

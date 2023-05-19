@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
 import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan, startWith, switchMap } from 'rxjs';
 import { delayEach } from '../delay-each';
 import { SignalComponent } from '../signal/signal.component';
-import { CHAR_END, DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
+import { BinarySignal, CHAR_END, DOT_DURATION_IN_MS, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
 
 @Component({
   selector: 'app-morse',
@@ -27,12 +27,12 @@ export class EncodeComponent {
 
     const escapePressed$ = fromEvent<KeyboardEvent>(document, 'keyup').pipe(
       filter(({ key }) => key === 'Escape'),
-      map(_ => undefined),
+      map(() => undefined),
     );
 
     this.typedText$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ => keyDownEvents$.pipe(
+      switchMap(() => keyDownEvents$.pipe(
         scan((acc, { key }) => acc + key, ''),
         startWith('')
       )),
@@ -55,8 +55,7 @@ export class EncodeComponent {
     */
     this.signal$ = escapePressed$.pipe(
       startWith(undefined),
-      switchMap(_ =>
-        keyDownEvents$.pipe(
+      switchMap(() => keyDownEvents$.pipe(
           map(({ key }) => alphabet.get(key as Letter)),
           filter(Boolean),
           map(morseSignals => morseSignals
@@ -67,7 +66,7 @@ export class EncodeComponent {
             endWith(...CHAR_END),
           )),
           delayEach(2 * dotTimeInMs),
-          startWith(0 as 0),
+          startWith(0 as BinarySignal),
         )
       )
     );
