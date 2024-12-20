@@ -7,12 +7,11 @@ import { BinarySignal, CHAR_END, Letter, MORSE_ALPHABET, MorseSignal } from '../
 import { DOT_DURATION_IN_MS } from 'src/main';
 
 @Component({
-  selector: 'app-morse',
-  standalone: true,
-  imports: [CommonModule, SignalComponent],
-  templateUrl: './encode.component.html',
-  styleUrls: ['./encode.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-morse',
+    imports: [CommonModule, SignalComponent],
+    templateUrl: './encode.component.html',
+    styleUrls: ['./encode.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EncodeComponent {
 

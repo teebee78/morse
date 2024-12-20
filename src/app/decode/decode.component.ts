@@ -8,12 +8,11 @@ import { appendOnceAfterIdleTime } from '../operators/append-once-after-idle-tim
 import { DOT_DURATION_IN_MS } from 'src/main';
 
 @Component({
-  selector: 'app-decode',
-  standalone: true,
-  templateUrl: './decode.component.html',
-  styleUrls: ['./decode.component.scss'],
-  imports: [CommonModule, SignalComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-decode',
+    templateUrl: './decode.component.html',
+    styleUrls: ['./decode.component.scss'],
+    imports: [CommonModule, SignalComponent],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DecodeComponent {
 

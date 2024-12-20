@@ -2,11 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, HostBinding, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-signal',
-  standalone: true,
-  imports: [CommonModule],
-  templateUrl: './signal.component.html',
-  styleUrls: ['./signal.component.scss']
+    selector: 'app-signal',
+    imports: [CommonModule],
+    templateUrl: './signal.component.html',
+    styleUrls: ['./signal.component.scss']
 })
 export class SignalComponent {
 

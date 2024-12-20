@@ -9,12 +9,11 @@ import { appendOnceAfterIdleTime } from '../operators/append-once-after-idle-tim
 
 
 @Component({
-  selector: 'app-round-trip',
-  standalone: true,
-  imports: [CommonModule, SignalComponent],
-  templateUrl: './round-trip.component.html',
-  styleUrls: ['./round-trip.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-round-trip',
+    imports: [CommonModule, SignalComponent],
+    templateUrl: './round-trip.component.html',
+    styleUrls: ['./round-trip.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RoundTripComponent {
 
