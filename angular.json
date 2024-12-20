@@ -65,10 +65,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "morse:build:production"
+              "buildTarget": "morse:build:production"
             },
             "development": {
-              "browserTarget": "morse:build:development"
+              "buildTarget": "morse:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -76,7 +76,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "morse:build"
+            "buildTarget": "morse:build"
           }
         },
         "test": {
