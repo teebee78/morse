@@ -33,7 +33,6 @@ export class DecodeComponent {
       map(() => undefined),
     );
 
-    
     this.decodedText$ = escapePressed$.pipe(
       startWith(undefined),
       switchMap(() => merge(of(''), merge(keyUp$, keyDown$).pipe(

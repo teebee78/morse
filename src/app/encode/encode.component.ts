@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Inject } from '@angular/core';
-import { Observable, concatMap, endWith, filter, from, fromEvent, map, scan, startWith, switchMap } from 'rxjs';
+import {Observable, concatMap, endWith, filter, from, fromEvent, map, scan, startWith, switchMap, tap} from 'rxjs';
 import { delayEach } from '../delay-each';
 import { SignalComponent } from '../signal/signal.component';
 import { BinarySignal, CHAR_END, Letter, MORSE_ALPHABET, MorseSignal } from '../morse-alphabet';
@@ -18,7 +18,8 @@ export class EncodeComponent {
   public signal$: Observable<0 | 1>;
   public typedText$: Observable<string>;
 
-  constructor(@Inject(MORSE_ALPHABET) alphabet: Map<Letter, MorseSignal[]>,
+  constructor(
+    @Inject(MORSE_ALPHABET) alphabet: Map<Letter, MorseSignal[]>,
     @Inject(DOT_DURATION_IN_MS) private dotTimeInMs: number) {
 
     const keyDownEvents$ = fromEvent<KeyboardEvent>(document, 'keydown').pipe(
@@ -59,9 +60,10 @@ export class EncodeComponent {
           map(({ key }) => alphabet.get(key as Letter)),
           filter(Boolean),
           map(morseSignals => morseSignals
-            .map(each => (each === '·' ? [1] : [1, 1, 1]) as (0 | 1)[])
+            .map(each => (each === '·' ? [1] : [1, 1, 1]) as BinarySignal[])
             .reduce((prev, curr) => (prev.length > 0) ? [...prev, 0, ...curr] : curr, [])
           ),
+        tap(value => console.log('value', value)),
           concatMap(sequence => from(sequence).pipe(
             endWith(...CHAR_END),
           )),
